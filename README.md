@@ -17,7 +17,7 @@ Przyjęte założenia:
 - koszt przejazdu wyrażany jest w jednostkach czasu symulującego upływ czasu
 - Niezadowolenie klientów jest zależne kwadratowo od upływu czasu
 
-Aplikacja implementować będzie algorytm A* optymalizujący:
+Aplikacja implementować będzie algorytm A* optymalizujący jeden z trzech przypadków:
 1. Czas dostawy
 2. Poziom niezadowolenia
 3. Zysk
