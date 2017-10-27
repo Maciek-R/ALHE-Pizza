@@ -1,32 +1,33 @@
-Zespó³:
+ZespÃ³Å‚:
 1. Maciej Ruszczyk
 2. Jan Antoniak
 
-Treœæ zadania:
-Dla grafu opisuj¹cego sieæ ulic w danym mieœcie opracowaæ metodê wyznaczania trasy dla dostawcy pizzy. Metoda powinna uwzglêdniaæ wystêpowanie korków w godzinach szczytu oraz poziom niezadowolenia klientów (nieliniowo proporcjonalny do czasu dostawy).
+TreÅ›Ä‡ zadania:
+Dla grafu opisujÄ…cego sieÄ‡ ulic w danym mieÅ›cie opracowaÄ‡ metodÄ™ wyznaczania trasy dla dostawcy pizzy. Metoda powinna uwzglÄ™dniaÄ‡ wystÄ™powanie korkÃ³w w godzinach szczytu oraz poziom niezadowolenia klientÃ³w (nieliniowo proporcjonalny do czasu dostawy).
 
-Jêzyk programowania: Python
-Przyjête za³o¿enia:
+JÄ™zyk programowania: Python
 
-- wêze³ grafu reprezentuje mo¿liwe miejsce dostarczenia pizzy
-- krawêdzie grafu reprezentuj¹ mo¿liwoœæ przejazdu z jednego wêz³a do drugiego
-- krawêdzie grafu nie s¹ skierowane(jest mo¿liwoœæ przejazdu w tê i z powrotem)
-- aplikacja ma wbudowany fikcyjny czas dnia, od którego bêdzie zale¿a³ czas przejazdu miêdzy wêz³ami(symulacja korków)
-- koszt przejazdu(waga krawêdzi) jest ustalony w pewnym przedziale i zmienia siê w zale¿noœci od godziny.
-- koszt przejazdu wyra¿any jest w jednostkach czasu symuluj¹cego up³yw czasu
-- Niezadowolenie klientów jest zale¿ne kwadratowo od up³ywu czasu
+PrzyjÄ™te zaÅ‚oÅ¼enia:
 
-Aplikacja implementowaæ bêdzie algorytm A* optymalizuj¹cy:
+- wÄ™zeÅ‚ grafu reprezentuje moÅ¼liwe miejsce dostarczenia pizzy
+- krawÄ™dzie grafu reprezentujÄ… moÅ¼liwoÅ›Ä‡ przejazdu z jednego wÄ™zÅ‚a do drugiego
+- krawÄ™dzie grafu nie sÄ… skierowane(jest moÅ¼liwoÅ›Ä‡ przejazdu w tÄ™ i z powrotem)
+- aplikacja ma wbudowany fikcyjny czas dnia, od ktÃ³rego bÄ™dzie zaleÅ¼aÅ‚ czas przejazdu miÄ™dzy wÄ™zÅ‚ami(symulacja korkÃ³w)
+- koszt przejazdu(waga krawÄ™dzi) jest ustalony w pewnym przedziale i zmienia siÄ™ w zaleÅ¼noÅ›ci od godziny.
+- koszt przejazdu wyraÅ¼any jest w jednostkach czasu symulujÄ…cego upÅ‚yw czasu
+- Niezadowolenie klientÃ³w jest zaleÅ¼ne kwadratowo od upÅ‚ywu czasu
+
+Aplikacja implementowaÄ‡ bÄ™dzie algorytm A* optymalizujÄ…cy:
 1. Czas dostawy
 2. Poziom niezadowolenia
 3. Zysk
 
-Dodatkowe za³o¿enia:
-- za dowiezienie pizzy klient p³aci przy odbiorze
-- klient odmawia zap³aty za pizzê, gdy jego poziom zadowolenia przekroczy dany poziom
+Dodatkowe zaÅ‚oÅ¼enia:
+- za dowiezienie pizzy klient pÅ‚aci przy odbiorze
+- klient odmawia zapÅ‚aty za pizzÄ™, gdy jego poziom zadowolenia przekroczy dany poziom
 
-Aplikacja napisana bêdzie w formie skryptu i bêdzie wykonywaæ nastêpuj¹ce operacje:
+Aplikacja napisana bÄ™dzie w formie skryptu i bÄ™dzie wykonywaÄ‡ nastÄ™pujÄ…ce operacje:
 
 1. Odczyt danych z pliku tekstowego(pliki .csv)
 2. Przetworzenie danych przy pomocy zaimplementowanego algorytmu
-3. Pokazanie wyników(graf ukazuj¹cy najlepsz¹ œcie¿kê)
+3. Pokazanie wynikÃ³w(graf ukazujÄ…cy najlepszÄ… Å›cieÅ¼kÄ™)
