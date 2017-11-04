@@ -1,6 +1,8 @@
 from random import randint
 from Edge import *
 from Node import *
+import csv
+
 WIDTH = 100
 HEIGHT = 100
 
@@ -11,11 +13,11 @@ class GraphGenerator:
         self.nodes = []
         self.nodesNo = nodesNo
         self.edgesNo = edgesNo
+        self.__generate__()
 
-    def generate(self):
+    def __generate__(self):
         self.__generateNodes__()
         self.__generateEdges__()
-
 
     def __generateNodes__(self):
         for x in range(self.nodesNo):
@@ -46,10 +48,5 @@ class GraphGenerator:
         else:
             return node
 
-    def saveToFile(self, path):
-        with open(path, 'wb') as csvfile:
-            writer = csv.writer(csvfile, delimiter = ' ', quotechar = '|', quoting=csv.QUOTE_MINIMAL)
-
-
 a = GraphGenerator(10, 4)
-a.generate()
+#a.writeToFile('nodes.csv', 'edges.csv')

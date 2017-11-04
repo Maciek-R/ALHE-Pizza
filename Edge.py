@@ -1,5 +1,5 @@
 from Node import *
-from random import randint
+from random import random
 
 class Edge:
     def __init__(self, nodeFrom, nodeTo, weight=None):
@@ -13,8 +13,11 @@ class Edge:
     def get(self):
         return self.nodeFrom, self.nodeTo
 
+    def getAll(self):
+        return self.nodeFrom, self.nodeTo, self.weight
+
     def __getRandomWeight__(self):
-        return 1 + randint() * 4
+        return 1 + random() * 4
 
     def __eq__(self, other):
         if isinstance(other, Edge):
@@ -22,5 +25,5 @@ class Edge:
         else:
             return False
 
-    def __str__(self):
-        return 'Edge('+str(self.nodeFrom)+', '+ str(self.nodeTo)+')'
+    def __hash__(self):
+        return hash(self.nodeFrom) ^ hash(self.nodeTo) ^ hash(self.weight)
