@@ -188,7 +188,7 @@ def draw_graph_with_positions(g: nx.Graph, final_path, title):
     final_edges = convert_from_path(g, final_path)
     nx.draw_networkx_edges(g, pos, final_edges, edge_color='#FF0000')
     nx.draw_networkx_edges(g, pos, diff_of_edges(g.edges, final_edges), edge_color='#AAAAAA')
-    nx.draw_networkx_edge_labels(g, pos, add_edge_labels(g), 0.2, 7)
+    nx.draw_networkx_edge_labels(g, pos, add_edge_labels(g), 0.2, 3)
     nx.draw_networkx_nodes(g, pos, nodelist=[final_path[0]], node_color='#000FFF')
     plt.title(title)
     plt.show()
@@ -219,7 +219,7 @@ def process_random_search(g: nx.Graph):
 
 def process_genetic_search(g: nx.Graph):
     path, cost = genetic_search(
-        g, 5, 500,
+        g, 5, 100,
         population_size=50,
         crossovers_number=35,
         best_count=3,
@@ -228,9 +228,10 @@ def process_genetic_search(g: nx.Graph):
     draw_graph_with_positions(g, path, 'genetic')
 
 
-# def load_graph(file_name):
-#     g = nx.read_gml(file_name, )
-#     return g
+def load_graph(file_name):
+    g = nx.read_gml(file_name, )
+    return g
+
 
 def load_graph(csv_file_name):
     graph = {}
@@ -252,7 +253,6 @@ def load_graph(csv_file_name):
             elif is_graph:
                 graph['clientNo'] = row[0]
             elif is_node:
-                print('ooopp', row)
                 id, label, x, y, parent, fun, isClient = row
                 node[int(id)] = {'label': label,
                                  'x': float(x),
@@ -269,14 +269,14 @@ def load_graph(csv_file_name):
     finally:
         f.close()
     number_of_nodes = len(node.keys())
-    g = nx.connected_watts_strogatz_graph(number_of_nodes, 5, .5, tries=100, seed=None)
+    clients_number = graph['clientNo']
+    g = nx.Graph(None, clientNo=clients_number)
     position = nx.spring_layout(g)
     for i in range(number_of_nodes):
         is_client = node[i]['isClient']
         g.add_node(i, id=i, x=node[i]['x'], y=node[i]['y'],
                    isClient=is_client, fun=node[i]['fun'], parent="None")
     clients_number = graph['clientNo']
-    g.graph['clientNo'] = clients_number
     add_edges_from_file(g, edge)
     return g
 
@@ -292,20 +292,20 @@ if __name__ == "__main__":
         (6, 1500, 400, True)])
 
     gl = load_graph('graf.csv')
-    # p1 = Process(target=own_heuristic_function, args=(gF,))
+    # p1 = Process(target=own_heuristic_function, args=(gl,))
     # p1.start()
-    #
+
     p2 = Process(target=process_greedy_a_star, args=(gl,))
     p2.start()
-    #
-    # p3 = Process(target=process_random_search, args=(gF,))
-    # p3.start()
-    #
-    # p4 = Process(target=process_genetic_search, args=(gF,))
-    # p4.start()
-    #
-    # p4.join()
-    # p3.join()
+
+    p3 = Process(target=process_random_search, args=(gl,))
+    p3.start()
+
+    p4 = Process(target=process_genetic_search, args=(gl,))
+    p4.start()
+
+    p4.join()
+    p3.join()
     p2.join()
     # p1.join()
 

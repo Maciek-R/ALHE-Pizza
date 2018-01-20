@@ -27,7 +27,6 @@ def path_time_cost(g, path):
     result_cost = 0
     for n1, n2 in take_pairs(path):
         edge = find_edge(g, g.nodes[n1], g.nodes[n2])
-        print('asdasdasdas', edge)
         result_cost += edge['distReal']*edge['trafficRate']
     return result_cost
 

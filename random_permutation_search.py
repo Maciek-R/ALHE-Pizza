@@ -9,7 +9,7 @@ def change_random_elements(client_nodes):
     return client_nodes
 
 
-def random_permutation_search(g: nx.Graph, start_node, steps=1000):
+def random_permutation_search(g: nx.Graph, start_node, steps=100):
     """
         Algorithm:
             1. initialize population
