@@ -8,6 +8,7 @@ from random_permutation_search import random_permutation_search
 from utils import *
 from genetic_search import genetic_search
 
+
 def print_nodes(graph: Graph):
     [print(node, g.nodes[node]) for node in graph.nodes]
 
@@ -217,12 +218,12 @@ def process_random_search(g: nx.Graph):
     draw_graph_with_positions(g, path, 'random')
 
 
-def process_genetic_search(g: nx.Graph):
+def process_genetic_search(g: nx.Graph, iterations):
     path, cost = genetic_search(
-        g, 5, 100,
-        population_size=50,
-        crossovers_number=35,
-        best_count=3,
+        g, 5, iterations,
+        population_size=20,
+        crossovers_number=14,
+        best_count=5,
         probability_of_mutation=0.1)
     print('genetic', path, cost)
     draw_graph_with_positions(g, path, 'genetic')
@@ -281,8 +282,36 @@ def load_graph(csv_file_name):
     return g
 
 
+def save_graph(g: nx.Graph, csv_file_name):
+    f = open(csv_file_name, 'w')
+
+    f.write("---g\n")
+    f.write(str(g.graph['clientNo'])+'\n')
+
+    f.write("---n\n")
+    for n in g.nodes:
+        f.write(str(g.nodes[n]['id']) + ',')
+        f.write("\"" + str(g.nodes[n]['id'])+"\"" + ',')
+        f.write(str(g.nodes[n]['x']) + ',')
+        f.write(str(g.nodes[n]['y']) + ',')
+        f.write("\"" + str(g.nodes[n]['parent'])+"\"" + ',')
+        f.write(str(g.nodes[n]['fun']) + ',')
+        f.write(str(int(g.nodes[n]['isClient'])) + '\n')
+
+    f.write("---e\n")
+    for edge in g.edges:
+        f.write(str(edge[0]) + ',')
+        f.write(str(edge[1]) + ',')
+        f.write(str(g.edges[edge]['distReal']) + ',')
+        f.write(str(g.edges[edge]['trafficRate']) + ',')
+        f.write(str(g.edges[edge]['dist']) + '\n')
+        print(g.edges[edge])
+
+    f.close()
+
+
 if __name__ == "__main__":
-    g = create_random_graph(20)
+    p = create_random_graph(50)
     gF = create_n_node_complete_graph([
         (1, 20, 80, False),
         (2, 50, 100, False),
@@ -291,22 +320,22 @@ if __name__ == "__main__":
         (5, 15, 30, False),
         (6, 1500, 400, True)])
 
-    gl = load_graph('graf.csv')
-    # p1 = Process(target=own_heuristic_function, args=(gl,))
-    # p1.start()
+    save_graph(p, 'graf.csv')
+    g = load_graph('graf.csv')
 
-    p2 = Process(target=process_greedy_a_star, args=(gl,))
+    p1 = Process(target=own_heuristic_function, args=(gF,))
+    p1.start()
+
+    p2 = Process(target=process_greedy_a_star, args=(g,))
     p2.start()
 
-    p3 = Process(target=process_random_search, args=(gl,))
+    p3 = Process(target=process_random_search, args=(g,))
     p3.start()
 
-    p4 = Process(target=process_genetic_search, args=(gl,))
+    p4 = Process(target=process_genetic_search, args=(g, 10,))
     p4.start()
 
     p4.join()
     p3.join()
     p2.join()
-    # p1.join()
-
-
+    p1.join()

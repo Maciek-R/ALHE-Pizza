@@ -149,10 +149,10 @@ def find_real_cost_for_path(g: nx.Graph, shortest_path, time, current_clients):
     return shortest_path
 
 
-def create_random_graph(number_of_nodes=50, min_number_of_clients=3):
+def create_random_graph(number_of_nodes=50, max_number_of_edge_from_node=5, min_number_of_clients=3):
     assert(number_of_nodes > min_number_of_clients)
     scale = 10000
-    g = nx.connected_watts_strogatz_graph(number_of_nodes, 5, .5, tries=100, seed=None)
+    g = nx.connected_watts_strogatz_graph(number_of_nodes, max_number_of_edge_from_node, .5, tries=100, seed=None)
     position = nx.spring_layout(g)
     for i in range(number_of_nodes):
         is_client = True if not random.randint(0, 5) or number_of_nodes-i <= min_number_of_clients else False
