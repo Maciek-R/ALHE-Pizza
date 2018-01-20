@@ -27,6 +27,7 @@ def path_time_cost(g, path):
     result_cost = 0
     for n1, n2 in take_pairs(path):
         edge = find_edge(g, g.nodes[n1], g.nodes[n2])
+        print('asdasdasdas', edge)
         result_cost += edge['distReal']*edge['trafficRate']
     return result_cost
 
@@ -96,6 +97,14 @@ def add_edges(graph: nx.Graph, edges_pairs):
         graph.add_edge(n1, n2, dist=dist, distReal=dist_real, trafficRate=traffic_rate)
 
 
+def add_edges_from_file(graph: nx.Graph, edges):
+    for n1, n2 in edges:
+        dist = edges[(n1, n2)]['dist']
+        dist_real = edges[(n1, n2)]['distReal']
+        traffic_rate = edges[(n1, n2)]['trafficRate']
+        graph.add_edge(n1, n2, dist=dist, distReal=dist_real, trafficRate=traffic_rate)
+
+
 def save_graph_to_file(g: nx.Graph):
     file_name = 'newGraph'
     version = 0
@@ -141,10 +150,10 @@ def find_real_cost_for_path(g: nx.Graph, shortest_path, time, current_clients):
     return shortest_path
 
 
-def create_random_graph(number_of_nodes=50, max_number_of_edge_from_node=4, min_number_of_clients=3):
+def create_random_graph(number_of_nodes=50, min_number_of_clients=3):
     assert(number_of_nodes > min_number_of_clients)
     scale = 10000
-    g = nx.connected_watts_strogatz_graph(number_of_nodes, max_number_of_edge_from_node, .5, tries=100, seed=None)
+    g = nx.connected_watts_strogatz_graph(number_of_nodes, 5, .5, tries=100, seed=None)
     position = nx.spring_layout(g)
     for i in range(number_of_nodes):
         is_client = True if not random.randint(0, 5) or number_of_nodes-i <= min_number_of_clients else False

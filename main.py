@@ -1,5 +1,5 @@
 from multiprocessing import Process
-
+import csv
 import matplotlib.pyplot as plt
 from networkx import Graph
 
@@ -67,7 +67,7 @@ def add_unique_to_list(enqueued, neighbors):
     return enqueued
 
 
-def greedy_algorithm(graph: Graph, source_node, sorted_edges, path):
+def own_greedy_algorithm(graph: Graph, source_node, sorted_edges, path):
     """ The main rule is that the given graph is a complete graph.
         What's more we can't visit particular node twice."""
     s_node = graph.nodes[source_node]
@@ -151,7 +151,7 @@ def own_heuristic_function(g: nx.Graph):
     sorted_edges = list(g.edges)
     sorted_edges = sorted(sorted_edges, key=lambda edge: g.edges[edge]['distReal']*g.edges[edge]['trafficRate'])
 
-    result = greedy_algorithm(g, 5, sorted_edges, path)
+    result = own_greedy_algorithm(g, 5, sorted_edges, path)
     final_path = resolve_path(g, result[0], result[-1])
     draw_graph(g, final_path)
 
@@ -218,7 +218,12 @@ def process_random_search(g: nx.Graph):
 
 
 def process_genetic_search(g: nx.Graph):
-    path, cost = genetic_search(g, 5, 500, population_size=50, crossovers_number=35, best_count=3, probability_of_mutation=0.1)
+    path, cost = genetic_search(
+        g, 5, 500,
+        population_size=50,
+        crossovers_number=35,
+        best_count=3,
+        probability_of_mutation=0.1)
     print('genetic', path, cost)
     draw_graph_with_positions(g, path, 'genetic')
 
@@ -227,11 +232,57 @@ def process_genetic_search(g: nx.Graph):
 #     g = nx.read_gml(file_name, )
 #     return g
 
+def load_graph(csv_file_name):
+    graph = {}
+    node = {}
+    edge = {}
+    is_graph, is_node, is_edge = False, False, False
+    f = open(csv_file_name, 'rt')
+    try:
+        reader = csv.reader(f)
+        for row in reader:
+            if row == ['---g']:
+                is_graph = True
+            elif row == ['---n']:
+                is_node = True
+                is_graph = False
+            elif row == ['---e']:
+                is_edge = True
+                is_node = False
+            elif is_graph:
+                graph['clientNo'] = row[0]
+            elif is_node:
+                print('ooopp', row)
+                id, label, x, y, parent, fun, isClient = row
+                node[int(id)] = {'label': label,
+                                 'x': float(x),
+                                 'y': float(y),
+                                 'parent': parent,
+                                 'fun': int(fun),
+                                 'isClient': int(isClient)}
+            elif is_edge:
+                source, target, distReal, trafficRate, dist = row
+                edge[(int(source), int(target))] = {'dist': float(dist),
+                                 'trafficRate': float(trafficRate),
+                                 'distReal': float(distReal)}
+
+    finally:
+        f.close()
+    number_of_nodes = len(node.keys())
+    g = nx.connected_watts_strogatz_graph(number_of_nodes, 5, .5, tries=100, seed=None)
+    position = nx.spring_layout(g)
+    for i in range(number_of_nodes):
+        is_client = node[i]['isClient']
+        g.add_node(i, id=i, x=node[i]['x'], y=node[i]['y'],
+                   isClient=is_client, fun=node[i]['fun'], parent="None")
+    clients_number = graph['clientNo']
+    g.graph['clientNo'] = clients_number
+    add_edges_from_file(g, edge)
+    return g
+
 
 if __name__ == "__main__":
-    g = create_random_graph(20, min_number_of_clients=5)
-    print(g.nodes)
-    print(g.edges)
+    g = create_random_graph(20)
     gF = create_n_node_complete_graph([
         (1, 20, 80, False),
         (2, 50, 100, False),
@@ -240,21 +291,22 @@ if __name__ == "__main__":
         (5, 15, 30, False),
         (6, 1500, 400, True)])
 
-    p1 = Process(target=own_heuristic_function, args=(gF,))
-    p1.start()
-
-    p2 = Process(target=process_greedy_a_star, args=(g,))
+    gl = load_graph('graf.csv')
+    # p1 = Process(target=own_heuristic_function, args=(gF,))
+    # p1.start()
+    #
+    p2 = Process(target=process_greedy_a_star, args=(gl,))
     p2.start()
-
-    p3 = Process(target=process_random_search, args=(g,))
-    p3.start()
-
-    p4 = Process(target=process_genetic_search, args=(g,))
-    p4.start()
-
-    p4.join()
-    p3.join()
+    #
+    # p3 = Process(target=process_random_search, args=(gF,))
+    # p3.start()
+    #
+    # p4 = Process(target=process_genetic_search, args=(gF,))
+    # p4.start()
+    #
+    # p4.join()
+    # p3.join()
     p2.join()
-    p1.join()
+    # p1.join()
 
 

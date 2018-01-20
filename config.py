@@ -1,4 +1,4 @@
 """Paraeters for heuristic"""
-a = 1
-b = 1
+a = 0
+b = 0
 c = 1
